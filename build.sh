@@ -22,9 +22,15 @@ setup_python_env() {
 install_arrow_python() {
     # -v for verbose, -D for diagnosis message.
     xrepo install -vD ${toolchain} pkg/arrow-python.lua
-    arrow_includedir=$(XMAKE_COLORTERM=nocolor xrepo fetch ${toolchain} pkg/arrow-python.lua | awk -F \" '/packages.*include/ { print $2 }')
-    arrow_installdir=$(dirname $arrow_includedir)
-    echo "arrow install dir: $arrow_installdir"
+}
+
+append_cmake_prefix_path() {
+    local name=$1
+    local includedir=$(XMAKE_COLORTERM=nocolor xrepo fetch ${toolchain} pkg/$name.lua | awk -F \" '/packages.*include/ { print $2 }')
+    local installdir=$(dirname $includedir)
+
+    echo "Prepend CMAKE_PREFIX_PATH for $name: $installdir"
+    export CMAKE_PREFIX_PATH="$installdir:$CMAKE_PREFIX_PATH"
 }
 
 build_pyarrow_wheel() {
@@ -32,11 +38,15 @@ build_pyarrow_wheel() {
     arrow_tarball=$(ls ~/.xmake/cache/packages/*/a/arrow/${arrow_version}/apache-arrow-${arrow_version}.tar.gz)
     echo $arrow_tarball
 
+    append_cmake_prefix_path "arrow-python"
+    echo "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+
     tar xf $arrow_tarball
-
     pushd apache-arrow-${arrow_version}/python
+    # As CMAKE_PREFIX_PATH may change, clean up build directory to ensure cmake
+    # configure not affected by cached values.
+    rm -rf build
 
-    export CMAKE_PREFIX_PATH=$arrow_installdir
     export PYARROW_WITH_PARQUET=1
     export PYARROW_WITH_DATASET=1
     export PYARROW_WITH_PLASMA=1
