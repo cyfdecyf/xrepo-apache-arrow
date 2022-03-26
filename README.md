@@ -31,6 +31,14 @@ is the purpose of this project.
 
 ## Building Arrow
 
+System requirements:
+
+- Linux system with `cmake`, `make`, `gcc`, `g++`, `pkg-config` and other build releated tools.
+  - On Debian/Ubuntu, run
+  ```
+  apt install -y --no-install-recommends build-essential patch autoconf automake libtool pkg-config git flex bison
+  ```
+
 To build Arrow static library with many features enabled, just run:
 
 ```
@@ -54,20 +62,20 @@ Edit [`pkg/common.lua`](./pkg/common.lua) to change Arrow configs.
 
 ## Building PyArrow package
 
-Take a look at [`build.sh`](./build.sh) and change according to your need.
+System requirements:
 
-- Currently, only Arrow 7.0.0 is supported.
-- You can easily select different compilers.
-
-Requirements:
-
-- Linux system with cmake, make, gcc and other build releated tools.
+- Same system requirements as building Arrow above, plus
 - Python 3 environment with `cython` and `numpy` installed.
   - The `build.sh` script has a `setup_python_env` function which sets up the minimal 
     python environment using `conda`
   - You can comment the call to `setup_python_env` to use your own python 
     environment.
   - Tested with `cython==0.29.28` and `numpy==1.21.5`. Other versions may also work.
+
+Take a look at [`build.sh`](./build.sh) and change according to your need.
+
+- Currently, only Arrow 7.0.0 is supported.
+- You can easily select different compilers.
 
 After making necessary changes to `build.sh`, just run it:
 
