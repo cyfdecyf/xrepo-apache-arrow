@@ -29,7 +29,30 @@ xrepo install arrow
 But to enable more Arrow features, you need more advanced usage of Xrepo, which 
 is the purpose of this project.
 
-## Building Arrow and PyArrow
+## Building Arrow
+
+To build Arrow static library with many features enabled, just run:
+
+```
+xrepo install pkg/arrow.lua
+```
+
+To change compiler used, pass `--toolchain` option:
+
+```
+xrepo install --toolchain=gcc-9 pkg/arrow.lua
+xrepo install --toolchain=gcc-11 pkg/arrow.lua
+```
+
+To see a list of supported toolchains:
+
+```
+xmake show -l toolchains | sort
+```
+
+Edit [`pkg/common.lua`](./pkg/common.lua) to change Arrow configs.
+
+## Building PyArrow package
 
 Take a look at [`build.sh`](./build.sh) and change according to your need.
 
