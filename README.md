@@ -44,6 +44,7 @@ Requirements:
     python environment using `conda`
   - You can comment the call to `setup_python_env` to use your own python 
     environment.
+  - Tested with `cython==0.29.28` and `numpy==1.21.5`. Other versions may also work.
 
 After making necessary changes to `build.sh`, just run it:
 
@@ -93,36 +94,23 @@ configurations that's used. It sets package version and configs.
 Here's the configs for arrow:
 
 ```lua
--- For using arrow as a static C++ library.
-function arrow_configs(opt)
-    return spec({
+    arrow = {
         version = "7.0.0",
         configs = {
             mimalloc = true, jemalloc = false,
             engine = true, dataset = true, plasma = true, re2 = true, utf8proc = true,
             shared_dep = false,
-            -- json is disable because arrow requires a pre-release of rapidjson.
             csv = true, json = false, parquet = true,
             brotli = true, bz2 = true, lz4 = true, zlib = true, zstd = true,
-            --python = true, shared = true
-        }
-    }, opt)
-end
-
--- For building arrow as a shared library and enable python support.
-function arrow_python_configs(opt)
-    local config = arrow_configs(opt)
-    config.configs.python = true
-    config.configs.shared = true
-
-    return config
-end
+            -- python = true, shared = true
+        },
+    }
 ```
 
 Arrow depends on lots of packages. Complexity arises when
 
-- Some packages are depended by multiple packages.
-- Packages A requires a specific version of package B
+- Some packages are used by multiple packages.
+- Packages A requires a specific version of package B.
 
 Using symbol `->` for dependency, here are a few dependencies we have:
 
@@ -131,22 +119,21 @@ Using symbol `->` for dependency, here are a few dependencies we have:
 - boost `->` bzip2, zlib
 - libevent `->` openssl
 
-We can specify single package verion on command line:
+We can specify package version on command line:
 
 ```
 xrepo install "arrow 7.0.0"
 ```
 
-Without specifying version, Xrepo will try to find the latest version of a package.
-This means the depended packages of arrow are going to use the latest version
-with the above command.
+This will install arrow version 7.0.0. But as we are not specifying version for
+dependent packages, Xrepo will use the latest version by default.
 
 It's better to fix package versions to avoid new package breaking build.
 
 - [`pkg/arrow.lua`](./pkg/arrow.lua) uses [`pkg/common.lua`](./pkg/common.lua)
   to accomplish this.
 - [`pkg/arrow_python.lua`](./pkg/arrow-python.lua) is the same as above but
-  also enables python support.
+  enables python support.
 
 Take a look at those two scripts to see how to fix all packages' versions and
 configs.
