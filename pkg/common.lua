@@ -92,3 +92,17 @@ function add_dep_configs(deps)
         add_requireconfs("**." .. name, get_configs(name, {override = true}))
     end
 end
+
+function add_pkg(name, conf)
+    local conf = conf or get_configs(name)
+    add_requires(name, conf)
+
+    for pkg, _ in pairs(all_configs) do
+        if pkg ~= name then
+            -- This to specify the config and version for every package that
+            -- depends on pkg.
+            -- `override = true` is needed to specify version.
+            add_requireconfs("**." .. pkg, get_configs(pkg, {override = true}))
+        end
+    end
+end
