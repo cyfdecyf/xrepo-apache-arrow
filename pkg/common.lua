@@ -8,6 +8,7 @@ local all_configs = {
     lz4 = {version = "v1.9.3"},
     zstd = {version = "1.5.2"},
     brotli = {version = "1.0.9"},
+    snappy = {version = "1.1.9"},
     boost = {
         version = "1.78.0",
         -- The configs enabled here are not required by arrow.
@@ -37,7 +38,7 @@ local all_configs = {
             -- json is disable because arrow requires a pre-release of rapidjson.
             csv = true, json = false, parquet = true,
             -- compression library.
-            brotli = true, bz2 = true, lz4 = true, zlib = true, zstd = true,
+            brotli = true, bz2 = true, lz4 = true, snappy = true, zlib = true, zstd = true,
             -- Configs for enable python support. Used in arrow-python.lua.
             -- python = true, shared = true
         },
