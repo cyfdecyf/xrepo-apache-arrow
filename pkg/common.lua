@@ -23,7 +23,7 @@ local all_configs = {
     -- Arrow requires rapidjson commit 1a803826f1197b5e30703afe4b9c0e7dd48074f5
     -- We can let xrepo use a specific git commit by forking xmake-repo.
     -- Submit new issue or send PR to xmake-repo if you need this.
-    rapidjson = {version = "v1.1.0-arrow"},
+    rapidjson = {version = "1a803826f1197b5e30703afe4b9c0e7dd48074f5"},
     -- For using arrow as a static C++ library.
     arrow = {
         version = "7.0.0",
