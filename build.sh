@@ -35,7 +35,8 @@ append_cmake_prefix_path() {
 
 build_pyarrow_wheel() {
     # Look for arrow source tarball in xmake's cache.
-    arrow_tarball=$(ls ~/.xmake/cache/packages/*/a/arrow/${arrow_version}/apache-arrow-${arrow_version}.tar.gz)
+    # It's possible we have multiple cached versions for the same package, thus use tail to get only 1.
+    arrow_tarball=$(ls ~/.xmake/cache/packages/*/a/arrow/${arrow_version} /apache-arrow-${arrow_version}.tar.gz | tail -n 1)
     echo $arrow_tarball
 
     append_cmake_prefix_path "arrow-python"
